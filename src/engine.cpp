@@ -35,7 +35,6 @@
 #include "perft.h"
 #include "position.h"
 #include "search.h"
-#include "syzygy/tbprobe.h"
 #include "types.h"
 #include "uci.h"
 #include "ucioption.h"
@@ -96,13 +95,6 @@ Engine::Engine(std::optional<std::string> path) :
                                  Stockfish::Search::Skill::LowestElo,
                                  Stockfish::Search::Skill::HighestElo);
     options["UCI_ShowWDL"] << Option(false);
-    options["SyzygyPath"] << Option("", [](const Option& o) {
-        Tablebases::init(o);
-        return std::nullopt;
-    });
-    options["SyzygyProbeDepth"] << Option(1, 1, 100);
-    options["Syzygy50MoveRule"] << Option(true);
-    options["SyzygyProbeLimit"] << Option(7, 0, 7);
     options["EvalFile"] << Option(EvalFileDefaultNameBig, [this](const Option& o) {
         load_big_network(o);
         return std::nullopt;
@@ -127,7 +119,7 @@ void Engine::go(Search::LimitsType& limits) {
     verify_networks();
     limits.capSq = capSq;
 
-    threads.start_thinking(options, pos, states, limits);
+    threads.start_thinking(pos, states, limits);
 }
 void Engine::stop() { threads.stop = true; }
 
@@ -136,9 +128,6 @@ void Engine::search_clear() {
 
     tt.clear(threads);
     threads.clear();
-
-    // @TODO wont work with multiple instances
-    Tablebases::init(options["SyzygyPath"]);  // Free mapped files
 }
 
 void Engine::set_on_update_no_moves(std::function<void(const Engine::InfoShort&)>&& f) {

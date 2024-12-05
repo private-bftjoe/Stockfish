@@ -85,15 +85,9 @@ Engine::Engine(std::optional<std::string> path) :
         return std::nullopt;
     });
     options["Ponder"] << Option(false);
-    options["MultiPV"] << Option(1, 1, MAX_MOVES);
-    options["Skill Level"] << Option(20, 0, 20);
     options["Move Overhead"] << Option(10, 0, 5000);
     options["nodestime"] << Option(0, 0, 10000);
     options["UCI_Chess960"] << Option(false);
-    options["UCI_LimitStrength"] << Option(false);
-    options["UCI_Elo"] << Option(Stockfish::Search::Skill::LowestElo,
-                                 Stockfish::Search::Skill::LowestElo,
-                                 Stockfish::Search::Skill::HighestElo);
     options["UCI_ShowWDL"] << Option(false);
     options["EvalFile"] << Option(EvalFileDefaultNameBig, [this](const Option& o) {
         load_big_network(o);

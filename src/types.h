@@ -19,6 +19,8 @@
 #ifndef TYPES_H_INCLUDED
     #define TYPES_H_INCLUDED
 
+constexpr int MultiPV = 1;
+
 // When compiling with provided Makefile (e.g. for Linux and OSX), configuration
 // is done automatically. To get started type 'make help'.
 //

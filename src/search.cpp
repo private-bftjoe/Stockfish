@@ -307,9 +307,6 @@ void Search::Worker::iterative_deepening() {
                         break;
             }
 
-            // Reset UCI info selDepth for each depth and each PV line
-            selDepth = 0;
-
             // Reset aspiration window starting size
             delta     = 5 + std::abs(rootMoves[pvIdx].meanSquaredScore) / 13461;
             Value avg = rootMoves[pvIdx].averageScore;
@@ -583,10 +580,6 @@ Value Search::Worker::search(
     // Check for the available remaining time
     if (is_mainthread())
         main_manager()->check_time(*thisThread);
-
-    // Used to send selDepth info to GUI (selDepth counts from 1, ply from 0)
-    if (PvNode && thisThread->selDepth < ss->ply + 1)
-        thisThread->selDepth = ss->ply + 1;
 
     if (!rootNode)
     {
@@ -1277,7 +1270,6 @@ moves_loop:  // When in check, search starts here
             if (moveCount == 1 || value > alpha)
             {
                 rm.score = rm.uciScore = value;
-                rm.selDepth            = thisThread->selDepth;
                 rm.scoreLowerbound = rm.scoreUpperbound = false;
 
                 if (value >= beta)
@@ -1494,10 +1486,6 @@ Value Search::Worker::qsearch(Position& pos, Stack* ss, Value alpha, Value beta)
     bestMove           = Move::none();
     ss->inCheck        = pos.checkers();
     moveCount          = 0;
-
-    // Used to send selDepth info to GUI (selDepth counts from 1, ply from 0)
-    if (PvNode && thisThread->selDepth < ss->ply + 1)
-        thisThread->selDepth = ss->ply + 1;
 
     // Step 2. Check for an immediate draw or maximum ply reached
     if (pos.is_draw(ss->ply) || ss->ply >= MAX_PLY)
@@ -2117,7 +2105,6 @@ void SearchManager::pv(Search::Worker&           worker,
         InfoFull info;
 
         info.depth    = d;
-        info.selDepth = rootMoves[i].selDepth;
         info.multiPV  = i + 1;
         info.score    = {v, pos};
         info.wdl      = wdl;

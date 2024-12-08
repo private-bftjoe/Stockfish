@@ -288,9 +288,6 @@ class TestInteractive(metaclass=OrderedClassMembers):
 
         self.stockfish.check_output(callback)
 
-    def test_clear_hash(self):
-        self.stockfish.send_command("setoption name Clear Hash")
-
     def test_fen_position_mate_1(self):
         self.stockfish.send_command("ucinewgame")
         self.stockfish.send_command(

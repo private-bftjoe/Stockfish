@@ -59,10 +59,7 @@ Engine::Engine(std::optional<std::string> path) :
     pos.set(StartFEN, false, &states->back());
     capSq = SQ_NONE;
 
-    options["Debug Log File"] << Option("", [](const Option& o) {
-        start_logger(o);
-        return std::nullopt;
-    });
+    start_logger(DebugLogFile);
 
     options["NumaPolicy"] << Option("auto", [this](const Option& o) {
         set_numa_config_from_option(o);
@@ -79,14 +76,8 @@ Engine::Engine(std::optional<std::string> path) :
         set_tt_size(o);
         return std::nullopt;
     });
-
-    options["Clear Hash"] << Option([this](const Option&) {
-        search_clear();
-        return std::nullopt;
-    });
     options["Ponder"] << Option(false);
     options["Move Overhead"] << Option(10, 0, 5000);
-    options["nodestime"] << Option(0, 0, 10000);
     options["UCI_Chess960"] << Option(false);
     options["UCI_ShowWDL"] << Option(false);
     options["EvalFile"] << Option(EvalFileDefaultNameBig, [this](const Option& o) {

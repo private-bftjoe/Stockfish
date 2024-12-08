@@ -20,6 +20,10 @@
     #define TYPES_H_INCLUDED
 
 constexpr int MultiPV = 1;
+static_assert(MultiPV >= 1 && MultiPV <= 218, "MultiPV out of range");
+constexpr auto DebugLogFile = "";
+constexpr int nodestime = 0;
+static_assert(nodestime >= 0 && nodestime <= 100000, "nodestime out of range");
 
 // When compiling with provided Makefile (e.g. for Linux and OSX), configuration
 // is done automatically. To get started type 'make help'.

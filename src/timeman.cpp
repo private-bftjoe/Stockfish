@@ -49,7 +49,7 @@ void TimeManagement::init(Search::LimitsType& limits,
                           int                 ply,
                           const OptionsMap&   options,
                           double&             originalTimeAdjust) {
-    TimePoint npmsec = TimePoint(options["nodestime"]);
+    TimePoint npmsec = TimePoint(nodestime);
 
     // If we have no time, we don't need to fully initialize TM.
     // startTime is used by movetime and useNodesTime is used in elapsed calls.
